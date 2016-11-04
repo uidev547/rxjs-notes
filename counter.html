@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rx JS click events</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.css" />
+    <style type="text/css">
+        pre {
+            background: #f1f1f1;
+            border: 1px solid;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+        }
+        body {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Counter</h2>
+    <button class="button">Count</button>
+    <div>
+        <pre><code id="code"></code></pre>
+    </div>
+    <script type="text/javascript" id="rx-code">
+        var button = document.querySelector('button');
+        var observable =  Rx.Observable.fromEvent(button, 'click')
+            .scan(count => {
+                return count + 1
+            }, 0);
+        var subscription = observable.subscribe(count => {
+            button.textContent = 'Count ' + count;
+        });
+    </script>
+    <script type="text/javascript">
+        document.getElementById('code').textContent = document.getElementById('rx-code').textContent
+    </script>
+
+</body>
+</html>
