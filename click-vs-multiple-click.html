@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Single Click vs Multiple Click</title>
+    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/rxjs/2.2.26/rx.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/rxjs/2.2.26/rx.async.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/rxjs/2.2.26/rx.coincidence.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/rxjs/2.2.26/rx.binding.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/rxjs/2.2.26/rx.time.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/rxjs-dom/2.0.7/rx.dom.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.css" />
+    <style type="text/css">
+        pre {
+            background: #f1f1f1;
+            border: 1px solid;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            max-height: calc( 100vh - 100px );
+            overflow-x: hidden;
+        }
+        body {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <button>Click</button><span id="status"></span>
+    </div>
+    <pre><code id="code"></code></pre>
+    
+    <script type="text/javascript" id="rx-code">    
+    var button = document.querySelector('button');
+    
+    //clicks stream
+    var clickStream = Rx.Observable.fromEvent(button, 'click');
+
+    // create multiClickStream 
+    var multiClickStream = clickStream
+        .buffer(function(e) { 
+            return clickStream.throttle(250); 
+        })
+        .map(function(list) { 
+            return list.length; 
+        })
+        .filter(function(x) { return x >= 2; });
+
+    // create singleClickStream 
+    var singleClickStream = clickStream
+        .buffer(function(e) { 
+            return clickStream.throttle(250); 
+        })
+        .map(function(list) { 
+            return list.length; 
+        })
+        .filter(function(x) { return x === 1; });
+
+    // Listen to both streams and render the text label accordingly
+    singleClickStream.subscribe(function (event) {
+        document.querySelector('#status').textContent = 'Single click';
+    });
+    multiClickStream.subscribe(function (numclicks) {
+        document.querySelector('#status').textContent = 'Multiple Clicks ( ' +numclicks+ ' Clicks )';
+    });
+
+    Rx.Observable.merge(singleClickStream, multiClickStream)
+    .throttle(1000)
+    .subscribe(function (suggestion) {
+        document.querySelector('#status').textContent = '';
+    });
+
+</script>
+<script type="text/javascript">
+    document.getElementById('code').textContent = document.getElementById('rx-code').textContent
+</script>
+
+</body>
+</html>
