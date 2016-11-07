@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Producing values</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.css" />
+    <style type="text/css">
+        pre {
+            background: #f1f1f1;
+            border: 1px solid;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            width: 100%;
+        }
+        body {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Producing values</h2>
+    <input />
+    <button>Button</button>
+    <div>
+        <div class="col-sm-6">
+            <pre><code id="code"></code></pre>
+        </div>
+        <div class="col-sm-6">
+            <p id="result-map">Map:</p>
+            <p id="result-pluck">Pluck:</p>
+            <p id="result-pluck-pairwise">pairwise:</p>
+            <p id="result-pluck-distinct">distinct:</p>
+            <p id="result-pluck-distinctUntilChanged">distinctUntilChanged:</p>
+        </div>
+        
+    </div>
+    <script type="text/javascript" id="rx-code">
+        var input = Rx.Observable.fromEvent(document.querySelector('input'), 'input');
+
+        // Pass on a new value
+        input.map(event => event.target.value)
+          .subscribe(value => {
+            $('#result-map').append('<br/>' + JSON.stringify(value) )
+          }); // "h"
+
+        // Pass on a new value by plucking it
+        input.pluck('target', 'value')
+          .subscribe(value => {
+            $('#result-pluck').append('<br/>' + JSON.stringify(value) )
+          }); // "h"
+
+        // Pass the two previous values
+        input.pluck('target', 'value').pairwise()
+          .subscribe(value => {
+            $('#result-pluck-pairwise').append('<br/>' + JSON.stringify(value) )
+          }); // ["h", "e"]
+
+        // Only pass unique values through
+        input.pluck('target', 'value').distinct()
+          .subscribe(value => {
+            $('#result-pluck-distinct').append('<br/>' + JSON.stringify(value) )
+          }); // "helo wrd"
+
+        // Do not pass repeating values through
+        input.pluck('target', 'value').distinctUntilChanged()
+          .subscribe(value => {
+            $('#result-pluck-distinctUntilChanged').append('<br/>' + JSON.stringify(value) )
+          }); // "helo world"
+    </script>
+    <script type="text/javascript">
+        document.getElementById('code').textContent = document.getElementById('rx-code').textContent
+    </script>
+
+</body>
+</html>
