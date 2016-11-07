@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Convert Obseravable</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.css" />
+    <style type="text/css">
+        pre {
+            background: #f1f1f1;
+            border: 1px solid;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+        }
+        body {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Converting to observables</h2>
+    <div>
+        <pre><code id="code"></code></pre>
+    </div>
+    <script type="text/javascript" id="rx-code">
+        // From one or multiple values
+        Rx.Observable.of('foo', 'bar');
+        // From array of values
+        Rx.Observable.from([1,2,3]);
+
+        /*// From an event
+        Rx.Observable.fromEvent(document.querySelector('button'), 'click');
+
+        // From a Promise
+        Rx.Observable.fromPromise(fetch('/users'));
+
+        // From a callback (last argument is a callback)
+        // fs.exists = (path, cb(exists))
+        var exists = Rx.Observable.bindCallback(fs.exists);
+        exists('file.txt').subscribe(exists => console.log('Does file exist?', exists));
+
+        // From a callback (last argument is a callback)
+        // fs.rename = (pathA, pathB, cb(err, result))
+        var rename = Rx.Observable.bindNodeCallback(fs.rename);
+        rename('file.txt', 'else.txt').subscribe(() => console.log('Renamed!'));
+        */
+    </script>
+    <script type="text/javascript">
+        document.getElementById('code').textContent = document.getElementById('rx-code').textContent
+    </script>
+
+</body>
+</html>

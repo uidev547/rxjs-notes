@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Obseravable</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.css" />
+    <style type="text/css">
+        pre {
+            background: #f1f1f1;
+            border: 1px solid;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+        }
+        body {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Create to observables</h2>
+    <div>
+        <pre><code id="code"></code></pre>
+    </div>
+    <script type="text/javascript" id="rx-code">
+        var myObservable = new Rx.Subject();
+        myObservable.subscribe(value => console.log(value));
+        myObservable.onNext('Subjectfoo');
+
+        var anotherObs = Rx.Observable.create(observer => {
+          observer.next('Observablefoo');
+          setTimeout(() => observer.next('ObservableAsyncBar'), 1000);
+        });
+        anotherObs.subscribe(value => console.log(value));
+        console.log('this is should print after "Observablefoo"');
+    </script>
+    <script type="text/javascript">
+        document.getElementById('code').textContent = document.getElementById('rx-code').textContent
+    </script>
+
+</body>
+</html>
